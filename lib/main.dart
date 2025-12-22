@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:shop/fetch_screen.dart';
 import 'package:shop/inner_screens/cat_screen.dart';
@@ -33,8 +34,10 @@ Future<void> main() async {
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey = "PUBLISH_HASH_KEY";
+  Stripe.publishableKey = dotenv.env['PUBLISH_HASH_KEY'] ?? '';
+  //Stripe.publishableKey = "PUBLISH_HASH_KEY";
   Stripe.instance.applySettings();
 
   runApp(MyApp());
@@ -71,6 +74,7 @@ class _MyAppState extends State<MyApp> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const MaterialApp(
             debugShowCheckedModeBanner: false,
+
             home: Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
@@ -116,6 +120,7 @@ class _MyAppState extends State<MyApp> {
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter PaymentDemo',
                 theme: Styles.themeData(themeProvider.getDarkTheme, context),
+
                 home: const FetchScreen(),
                 routes: {
                   OnSaleScreen.routeName: (ctx) => const OnSaleScreen(),

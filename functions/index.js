@@ -1,5 +1,7 @@
+require('dotenv').config(); 
 const functions = require("firebase-functions");
-const stripe = require("stripe")("SECRET_KEY");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY); 
+//const stripe = require("stripe")("SECRET_KEY");
 
 exports.stripePaymentIntenRequest = functions.https.onRequest(async (req, res) => {
     try {
