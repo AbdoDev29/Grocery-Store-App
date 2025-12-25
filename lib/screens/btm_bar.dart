@@ -38,11 +38,6 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
     bool _isDark = themeState.getDarkTheme;
     return Scaffold(
-      /*
-      appBar: AppBar(
-        title: Text(_pages[_selectedIndex]['title']),
-      ),
-      */
       body: _pages[_selectedIndex]['page'],
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectedPage,
@@ -63,45 +58,6 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             label: "Home",
           ),
 
-          // BottomNavigationBarItem(
-          //   icon: badges.Badge(
-          //     position: badges.BadgePosition.topEnd(top: -10, end: -12),
-          //     showBadge: true,
-          //     ignorePointer: false,
-          //     onTap: () {},
-          //     badgeContent: Icon(Icons.check, color: Colors.white, size: 10),
-          //     badgeAnimation: badges.BadgeAnimation.rotation(
-          //       animationDuration: Duration(seconds: 1),
-          //       colorChangeAnimationDuration: Duration(seconds: 1),
-          //       loopAnimation: false,
-          //       curve: Curves.fastOutSlowIn,
-          //       colorChangeAnimationCurve: Curves.easeInCubic,
-          //     ),
-          //     badgeStyle: badges.BadgeStyle(
-          //       shape: badges.BadgeShape.square,
-          //       badgeColor: Colors.blue,
-          //       padding: EdgeInsets.all(5),
-          //       borderRadius: BorderRadius.circular(4),
-          //       borderSide: BorderSide(color: Colors.white, width: 2),
-          //       borderGradient: badges.BadgeGradient.linear(
-          //         colors: [Colors.red, Colors.black],
-          //       ),
-          //       badgeGradient: badges.BadgeGradient.linear(
-          //         colors: [Colors.blue, Colors.yellow],
-          //         begin: Alignment.topCenter,
-          //         end: Alignment.bottomCenter,
-          //       ),
-          //       elevation: 0,
-          //     ),
-
-          //     child: Icon(
-          //       _selectedIndex == 1
-          //           ? IconlyBold.category
-          //           : IconlyLight.category,
-          //     ),
-          //   ),
-          //   label: "Categories",
-          // ),
           BottomNavigationBarItem(
             icon: Icon(
               color: color,

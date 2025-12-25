@@ -33,12 +33,12 @@ android {
 
     buildTypes {
         release {
-            // عطّل التصغير مؤقتًا عشان R8 ما يشتغلش
-            isMinifyEnabled = true
-            isShrinkResources = true
-
-            // إمضاء مؤقت بالـ debug علشان build يشتغل
+            
+            isMinifyEnabled = false
+            isShrinkResources = false
             signingConfig = signingConfigs.getByName("debug")
+            
+            
         }
     }
 
