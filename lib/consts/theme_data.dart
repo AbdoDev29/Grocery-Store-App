@@ -12,7 +12,7 @@ class Styles {
 
       scaffoldBackgroundColor:
           //0A1931  // white yellow 0xFFFCF8EC
-          isDarkTheme ? const Color(0xFF00001a) : const Color(0xFFFFFFFF),
+          isDarkTheme ? const Color(0xFF00001a) : const Color(0xffEFEFEF),
       primaryColor: Colors.blue,
       colorScheme: ThemeData().colorScheme.copyWith(
         secondary: isDarkTheme
@@ -22,7 +22,7 @@ class Styles {
       ),
       cardColor: isDarkTheme
           ? const Color(0xFF0a0d2c)
-          : const Color(0xFFF2FDFD),
+          : const Color(0xFFFFFFFF),
       canvasColor: isDarkTheme ? Colors.black : Colors.grey[50],
       buttonTheme: Theme.of(context).buttonTheme.copyWith(
         colorScheme: isDarkTheme

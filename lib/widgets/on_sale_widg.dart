@@ -42,7 +42,7 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Material(
-        color: Theme.of(context).cardColor.withValues(alpha: 0.9),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
