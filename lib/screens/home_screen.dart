@@ -104,16 +104,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Flexible(
                   child: SizedBox(
-                    height: size.height * 0.24,
+                    height: size.height * 0.26,
                     child: ListView.builder(
                       itemCount: productsOnSale.length < 10
                           ? productsOnSale.length
                           : 10,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (ctx, index) {
-                        return ChangeNotifierProvider.value(
-                          value: productsOnSale[index],
-                          child: const OnSaleWidget(),
+                        return SizedBox(
+                          width: size.width * 0.45,
+                          child: ChangeNotifierProvider.value(
+                            value: productsOnSale[index],
+                            child: const OnSaleWidget(),
+                          ),
                         );
                       },
                     ),

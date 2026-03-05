@@ -59,88 +59,130 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
             // );
           },
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               // mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    FancyShimmerImage(
-                      imageUrl: productModle.imageUrl,
-                      height: size.width * 0.22,
-                      width: size.width * 0.22,
-                      boxFit: BoxFit.fill,
-                    ),
-                    Column(
-                      children: [
-                        TextWidget(
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: theme
+                            ? const Color(0xFF00001a)
+                            : const Color(0xFFEFEFEF),
+                        borderRadius: const BorderRadius.only(
+                          // topLeft: Radius.circular(12),
+                          bottomRight: Radius.circular(12),
+                        ),
+                      ),
+                      child: Flexible(
+                        flex: 3,
+                        child: TextWidget(
                           text: productModle.isPiece ? '1Peace' : '1KG',
                           color: color,
                           textSize: 22,
-                          isTitle: true,
+                          //isTitle: true,
                         ),
-                        const SizedBox(
-                          height: 6,
+                      ),
+                    ),
+                    Flexible(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: HeartBTN(
+                          productId: productModle.id,
+                          isInWishlist: _isInWishlist,
                         ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: _isInCart
-                                  ? null
-                                  : () async {
-                                      final User? user =
-                                          authInstance.currentUser;
-                                      if (user == null) {
-                                        // print('user id is: ${user!.uid}');
-                                        GlobalMethods.errorDialog(
-                                          subtitle:
-                                              'No user found, Please login first',
-                                          context: context,
-                                        );
-                                        return;
-                                      }
-                                      await GlobalMethods.addToCart(
-                                        productId: productModle.id,
-                                        quantity: 1,
-                                        context: context,
-                                      );
-                                      await cartProvider.fetchCart();
-
-                                      // cartProvider.addProductsToCart(
-                                      //   productId: productModle.id,
-                                      //   quantity: 1,
-                                      // );
-                                    },
-                              child: Icon(
-                                _isInCart ? IconlyBold.bag2 : IconlyLight.bag2,
-                                size: 22,
-                                color: _isInCart ? Colors.green : color,
-                              ),
-                            ),
-                            HeartBTN(
-                              productId: productModle.id,
-                              isInWishlist: _isInWishlist,
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
-                PriceWidget(
-                  isOnSale: true,
-                  price: productModle.price,
-                  salePrice: productModle.salePrice,
-                  textPrice: '1',
+                Center(
+                  child: FancyShimmerImage(
+                    imageUrl: productModle.imageUrl,
+                    height: size.width * 0.22,
+                    width: size.width * 0.22,
+                    boxFit: BoxFit.fill,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: PriceWidget(
+                    isOnSale: true,
+                    price: productModle.price,
+                    salePrice: productModle.salePrice,
+                    textPrice: '1',
+                  ),
                 ),
                 const SizedBox(height: 5),
-                TextWidget(
-                  text: productModle.title,
-                  color: color,
-                  textSize: 16,
-                  isTitle: true,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                    children: [
+                      TextWidget(
+                        text: productModle.title,
+                        color: color,
+                        textSize: 16,
+                        isTitle: true,
+                      ),
+                      GestureDetector(
+                        onTap: _isInCart
+                            ? null
+                            : () async {
+                                final User? user = authInstance.currentUser;
+                                if (user == null) {
+                                  // print('user id is: ${user!.uid}');
+                                  GlobalMethods.errorDialog(
+                                    subtitle:
+                                        'No user found, Please login first',
+                                    context: context,
+                                  );
+                                  return;
+                                }
+                                await GlobalMethods.addToCart(
+                                  productId: productModle.id,
+                                  quantity: 1,
+                                  context: context,
+                                );
+                                await cartProvider.fetchCart();
+
+                                // cartProvider.addProductsToCart(
+                                //   productId: productModle.id,
+                                //   quantity: 1,
+                                // );
+                              },
+                        child: Container(
+                          padding: const EdgeInsets.all(6.86),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF57E2A),
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Icon(
+                            _isInCart ? Icons.done : Icons.add,
+                            size: 22,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        // Icon(
+                        //   _isInCart ? IconlyBold.bag2 : IconlyLight.bag2,
+                        //   size: 22,
+                        //   color: _isInCart ? Colors.green : color,
+                        // ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 5),
               ],
