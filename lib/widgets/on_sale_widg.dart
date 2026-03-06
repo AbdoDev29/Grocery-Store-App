@@ -69,38 +69,32 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Flexible(
-                      flex: 3,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme
-                              ? const Color(0xFF00001a)
-                              : const Color(0xFFEFEFEF),
-                          borderRadius: const BorderRadius.only(
-                            // topLeft: Radius.circular(12),
-                            bottomRight: Radius.circular(12),
-                          ),
-                        ),
-                        child: TextWidget(
-                          text: productModle.isPiece ? '1Peace' : '1KG',
-                          color: color,
-                          textSize: 22,
-                          //isTitle: true,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: theme
+                            ? const Color(0xFF00001a)
+                            : const Color(0xFFEFEFEF),
+                        borderRadius: const BorderRadius.only(
+                          // topLeft: Radius.circular(12),
+                          bottomRight: Radius.circular(12),
                         ),
                       ),
+                      child: TextWidget(
+                        text: productModle.isPiece ? '1Peace' : '1KG',
+                        color: color,
+                        textSize: 22,
+                        //isTitle: true,
+                      ),
                     ),
-                    Flexible(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: HeartBTN(
-                          productId: productModle.id,
-                          isInWishlist: _isInWishlist,
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: HeartBTN(
+                        productId: productModle.id,
+                        isInWishlist: _isInWishlist,
                       ),
                     ),
                   ],
