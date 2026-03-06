@@ -1,8 +1,11 @@
 import 'package:card_swiper/card_swiper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shop/consts/firebase_consts.dart';
 import 'package:shop/inner_screens/feeds_screen.dart';
 import 'package:shop/inner_screens/on_sale_screen.dart';
 import 'package:shop/models/products_model.dart';
@@ -23,6 +26,49 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String? _name;
+  bool _isLoading = false;
+  final User? user = authInstance.currentUser;
+  @override
+  void initState() {
+    getUserData();
+    super.initState();
+  }
+
+  Future<void> getUserData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (user == null) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+    try {
+      String _uid = user!.uid;
+
+      final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_uid)
+          .get();
+      if (userDoc == null) {
+        return;
+      } else {
+        _name = userDoc.get('name');
+      }
+    } catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
+      GlobalMethods.errorDialog(subtitle: '$error', context: context);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Utils utils = Utils(context);
@@ -33,6 +79,53 @@ class _HomeScreenState extends State<HomeScreen> {
     List<ProductModel> allProducts = productProviders.getProducts;
     List<ProductModel> productsOnSale = productProviders.getOnSaleProducts;
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80,
+        elevation: 0,
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.grey, width: 1.5),
+              ),
+              child: Icon(
+                Icons.person_outline,
+                size: 30,
+                color: color,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            RichText(
+              text: TextSpan(
+                text: 'Hi,  ',
+                style: const TextStyle(
+                  color: Colors.cyan,
+                  fontSize: 27,
+                  fontWeight: FontWeight.bold,
+                ),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: _name == null ? 'user' : _name,
+                    style: TextStyle(
+                      color: color,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    // recognizer: TapGestureRecognizer()
+                    // ..onTap = () {
+                    //   print('My name is pressed');
+                    // },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
