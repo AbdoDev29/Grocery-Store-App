@@ -71,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Utils(context).getTheme;
     final Utils utils = Utils(context);
     final themeState = utils.getTheme;
     final Color color = Utils(context).color;
@@ -82,6 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         toolbarHeight: 80,
         elevation: 0,
+        backgroundColor: theme
+            ? const Color(0xFF00001a)
+            : const Color(0xFFEFEFEF),
         title: Row(
           children: [
             Container(
@@ -129,25 +133,33 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: size.height * 0.33,
-              child: Swiper(
-                itemBuilder: (BuildContext context, int index) {
-                  return Image.asset(
-                    Constss.offerImages[index],
-                    fit: BoxFit.fill,
-                  );
-                },
-                autoplay: true,
-                itemCount: Constss.offerImages.length,
-                pagination: const SwiperPagination(
-                  alignment: Alignment.bottomCenter,
-                  builder: DotSwiperPaginationBuilder(
-                    color: Colors.white,
-                    activeColor: Colors.red,
+            Container(
+              height: size.height * 0.20,
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: SizedBox(
+                height: size.height * 0.20,
+                child: Swiper(
+                  itemBuilder: (BuildContext context, int index) {
+                    return Image.asset(
+                      Constss.offerImages[index],
+                      fit: BoxFit.fill,
+                    );
+                  },
+                  autoplay: true,
+                  itemCount: Constss.offerImages.length,
+                  pagination: const SwiperPagination(
+                    alignment: Alignment.bottomCenter,
+                    builder: DotSwiperPaginationBuilder(
+                      color: Colors.white,
+                      activeColor: Colors.red,
+                    ),
                   ),
+                  // control: const SwiperControl(color: Colors.black),
                 ),
-                // control: const SwiperControl(color: Colors.black),
               ),
             ),
             const SizedBox(
