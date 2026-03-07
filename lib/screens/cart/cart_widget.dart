@@ -11,6 +11,7 @@ import 'package:shop/providers/wishlist_provider.dart';
 import 'package:shop/widgets/heart_btn.dart';
 import 'package:shop/widgets/text_widget.dart';
 import '../../services/utils.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class CartWidget extends StatefulWidget {
   const CartWidget({Key? key, required this.q}) : super(key: key);
@@ -40,6 +41,8 @@ class _CartWidgetState extends State<CartWidget> {
   @override
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
+    final theme = Utils(context).getTheme;
+
     Size size = Utils(context).getScreenSize;
     final productProvider = Provider.of<ProductProvider>(context);
     final cartModel = Provider.of<CartModel>(context);
@@ -56,150 +59,127 @@ class _CartWidgetState extends State<CartWidget> {
     );
 
     final cartProvider = Provider.of<CartProvider>(context);
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          ProductDetails.routeName,
-          arguments: cartModel.productId,
-        );
-      },
-      child: Row(
+    return Slidable(
+      endActionPane: ActionPane(
+        motion: const DrawerMotion(),
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(12),
+          SlidableAction(
+            onPressed: (context) async {
+              final confirm = await showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  title: const Text('Are you sure?'),
+                  content: const Text(
+                    'Do you want to remove the item from the cart?',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  actions: [
+                    OutlinedButton(
+                      onPressed: () => Navigator.of(ctx).pop(false),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: color),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
+
+                      child: const Text(
+                        'Back',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => Navigator.of(ctx).pop(true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xffD85454), // 👈 red
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
+                      child: const Text(
+                        'Delete',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      height: size.width * 0.25,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
+              );
+              if (confirm == true) {
+                await cartProvider.removeOneItem(
+                  cartId: cartModel.id,
+                  productId: cartModel.productId,
+                  quantity: cartModel.quantity,
+                );
+              }
+            },
+            backgroundColor: const Color(0xffD85454),
+            foregroundColor: Colors.white,
+            icon: Icons.delete_outline,
+
+            label: 'Delete',
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ],
+      ),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            ProductDetails.routeName,
+            arguments: cartModel.productId,
+          );
+        },
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8.0),
+                        height: size.width * 0.20,
+                        width: size.width * 0.20,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: FancyShimmerImage(
+                          imageUrl: getCurrProduct.imageUrl,
+                          boxFit: BoxFit.contain,
+                        ),
                       ),
-                      child: FancyShimmerImage(
-                        imageUrl: getCurrProduct.imageUrl,
-                        boxFit: BoxFit.fill,
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextWidget(
-                          text: getCurrProduct.title,
-                          color: color,
-                          textSize: 20,
-                          isTitle: true,
-                        ),
-                        const SizedBox(
-                          height: 16.0,
-                        ),
-                        SizedBox(
-                          width: size.width * 0.3,
-                          child: Row(
-                            children: [
-                              _quantityController(
-                                fct: () {
-                                  if (_quantityTextController.text == '1') {
-                                    return;
-                                  } else {
-                                    cartProvider.reduceQuantityByOne(
-                                      cartModel.productId,
-                                    );
-                                    setState(() {
-                                      _quantityTextController.text =
-                                          (int.parse(
-                                                    _quantityTextController
-                                                        .text,
-                                                  ) -
-                                                  1)
-                                              .toString();
-                                    });
-                                  }
-                                },
-                                color: Colors.red,
-                                icon: CupertinoIcons.minus,
-                              ),
-                              Flexible(
-                                flex: 1,
-                                child: TextField(
-                                  controller: _quantityTextController,
-                                  keyboardType: TextInputType.number,
-                                  maxLines: 1,
-                                  style: TextStyle(color: color),
-                                  decoration: const InputDecoration(
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(),
-                                    ),
-                                  ),
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(
-                                      RegExp('[0-9]'),
-                                    ),
-                                  ],
-                                  onChanged: (v) {
-                                    setState(() {
-                                      if (v.isEmpty) {
-                                        _quantityTextController.text = '1';
-                                      } else {
-                                        return;
-                                      }
-                                    });
-                                  },
-                                ),
-                              ),
-                              _quantityController(
-                                fct: () {
-                                  cartProvider.increaseQuantityByOne(
-                                    cartModel.productId,
-                                  );
-                                  setState(() {
-                                    _quantityTextController.text =
-                                        (int.parse(
-                                                  _quantityTextController.text,
-                                                ) +
-                                                1)
-                                            .toString();
-                                  });
-                                },
-                                color: Colors.green,
-                                icon: CupertinoIcons.plus,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Column(
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          InkWell(
-                            onTap: () async {
-                              await cartProvider.removeOneItem(
-                                cartId: cartModel.id,
-                                productId: cartModel.productId,
-                                quantity: cartModel.quantity,
-                              );
-                            },
-                            child: const Icon(
-                              CupertinoIcons.cart_badge_minus,
-                              color: Colors.red,
-                              size: 20,
-                            ),
+                          TextWidget(
+                            text: getCurrProduct.title,
+                            color: color,
+                            textSize: 20,
+                            isTitle: true,
                           ),
                           const SizedBox(
-                            height: 5,
-                          ),
-                          HeartBTN(
-                            productId: getCurrProduct.id,
-                            isInWishlist: _isInWishlist,
+                            height: 16.0,
                           ),
                           TextWidget(
                             text:
@@ -207,17 +187,110 @@ class _CartWidgetState extends State<CartWidget> {
                             color: color,
                             textSize: 18,
                             maxLines: 1,
+                            isTitle: true,
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(width: 5),
-                  ],
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: SizedBox(
+                          width: size.width * 0.12,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Column(
+                              children: [
+                                _quantityController(
+                                  fct: () {
+                                    if (_quantityTextController.text == '1') {
+                                      return;
+                                    } else {
+                                      cartProvider.reduceQuantityByOne(
+                                        cartModel.productId,
+                                      );
+                                      setState(() {
+                                        _quantityTextController.text =
+                                            (int.parse(
+                                                      _quantityTextController
+                                                          .text,
+                                                    ) -
+                                                    1)
+                                                .toString();
+                                      });
+                                    }
+                                  },
+                                  color: const Color(0xffF57E2A),
+                                  icon: CupertinoIcons.minus,
+                                  isPlus: false,
+                                ),
+                                SizedBox(
+                                  height: 40,
+                                  width: 12,
+                                  child: TextField(
+                                    controller: _quantityTextController,
+                                    keyboardType: TextInputType.number,
+                                    readOnly: true,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      color: color,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+
+                                      focusedBorder: InputBorder.none,
+                                      isDense: false,
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                        RegExp('[0-9]'),
+                                      ),
+                                    ],
+                                    onChanged: (v) {
+                                      setState(() {
+                                        if (v.isEmpty) {
+                                          _quantityTextController.text = '1';
+                                        } else {
+                                          return;
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                                _quantityController(
+                                  fct: () {
+                                    cartProvider.increaseQuantityByOne(
+                                      cartModel.productId,
+                                    );
+                                    setState(() {
+                                      _quantityTextController.text =
+                                          (int.parse(
+                                                    _quantityTextController
+                                                        .text,
+                                                  ) +
+                                                  1)
+                                              .toString();
+                                    });
+                                  },
+                                  color: const Color(0xffF57E2A),
+                                  icon: CupertinoIcons.plus,
+                                  isPlus: true,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -226,30 +299,48 @@ class _CartWidgetState extends State<CartWidget> {
     required Function fct,
     required IconData icon,
     required Color color,
+    required bool isPlus, // 👈 add this
   }) {
-    return Flexible(
-      flex: 2,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: Material(
-          color: color,
-          borderRadius: BorderRadius.circular(12),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(12),
-            onTap: () {
-              fct();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                icon,
-                color: Colors.white,
-                size: 20,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: isPlus
+          ? Material(
+              color: color,
+              borderRadius: BorderRadius.circular(24),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(24),
+                onTap: () => fct(),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+              ),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: color,
+                  width: 1.5,
+                ),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(24),
+                onTap: () => fct(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    icon,
+                    color: color,
+                    size: 20,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

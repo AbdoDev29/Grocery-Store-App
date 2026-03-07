@@ -75,6 +75,10 @@ class CardScreen extends StatelessWidget {
                 _checkOut(ctx: context),
                 Expanded(
                   child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     itemCount: cartItemList.length,
                     itemBuilder: (ctx, index) {
                       return ChangeNotifierProvider.value(
@@ -116,7 +120,7 @@ class CardScreen extends StatelessWidget {
         child: Row(
           children: [
             Material(
-              color: Colors.green,
+              color: const Color(0xffF48A3B),
               borderRadius: BorderRadius.circular(10),
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
