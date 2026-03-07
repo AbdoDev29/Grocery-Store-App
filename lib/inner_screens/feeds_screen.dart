@@ -76,14 +76,14 @@ class _FeedsScreenState extends State<FeedsScreen> {
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: const BorderSide(
-                        color: Colors.greenAccent,
+                        color: Color(0xffF48A3B),
                         width: 1,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: const BorderSide(
-                        color: Colors.greenAccent,
+                        color: Color(0xffF48A3B),
                         width: 1,
                       ),
                     ),
