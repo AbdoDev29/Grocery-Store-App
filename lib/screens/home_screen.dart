@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (ctx, index) {
                         return SizedBox(
-                          width: size.width * 0.45,
+                          width: size.width * 0.46,
                           child: ChangeNotifierProvider.value(
                             value: productsOnSale[index],
                             child: const OnSaleWidget(),
@@ -267,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisCount: 2,
               padding: EdgeInsets.zero,
               // crossAxisSpacing: 10,
-              childAspectRatio: size.width / (size.height * 0.50),
+              childAspectRatio: size.width / (size.height * 0.46),
               children: List.generate(
                 allProducts.length < 4
                     ? allProducts
