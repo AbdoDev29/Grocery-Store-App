@@ -48,7 +48,9 @@ class _ViewedRecentlyScreenState extends State<ViewedRecentlyScreen> {
                 GlobalMethods.warningDialog(
                   title: 'Empty your history?',
                   subtitle: 'Are you sure?',
-                  fct: () {},
+                  fct: () {
+                    viewedProdProvider.clearHistory();
+                  },
                   context: context,
                 );
               },
@@ -75,7 +77,7 @@ class _ViewedRecentlyScreenState extends State<ViewedRecentlyScreen> {
           itemCount: viewedProdItemsList.length,
           itemBuilder: (ctx, index) {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
               child: ChangeNotifierProvider.value(
                 value: viewedProdItemsList[index],
                 child: ViewedRecentlyWidget(),

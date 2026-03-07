@@ -32,7 +32,7 @@ class EmptyScreen extends StatelessWidget {
               Image.asset(
                 imagePath,
                 width: double.infinity,
-                height: size.height * 0.4,
+                height: size.height * 0.3,
               ),
               const SizedBox(
                 height: 10,

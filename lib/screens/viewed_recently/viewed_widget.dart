@@ -41,86 +41,103 @@ class _ViewedRecentlyWidgetState extends State<ViewedRecentlyWidget> {
     Size size = Utils(context).getScreenSize;
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: GestureDetector(
-        onTap: () {
-          // GlobalMethods.navigateTo(
-          //     ctx: context, routeName: ProductDetails.routeName);
-        },
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FancyShimmerImage(
-              imageUrl: getCurrProduct.imageUrl,
-              boxFit: BoxFit.fill,
-              height: size.width * 0.27,
-              width: size.width * 0.25,
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: 12,
+        ),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
-            const SizedBox(
-              width: 12,
-            ),
-            Column(
-              children: [
-                TextWidget(
-                  text: getCurrProduct.title,
-                  color: color,
-                  textSize: 24,
-                  isTitle: true,
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                TextWidget(
-                  text: '\$${usedPrice.toStringAsFixed(2)}',
-                  color: color,
-                  textSize: 20,
-                  isTitle: false,
-                ),
-              ],
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Material(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.green,
-                child: InkWell(
+          ],
+        ),
+        child: GestureDetector(
+          onTap: () {
+            // GlobalMethods.navigateTo(
+            //     ctx: context, routeName: ProductDetails.routeName);
+          },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FancyShimmerImage(
+                imageUrl: getCurrProduct.imageUrl,
+                boxFit: BoxFit.contain,
+                height: size.width * 0.15,
+                width: size.width * 0.15,
+              ),
+              const SizedBox(
+                width: 12,
+              ),
+              Column(
+                children: [
+                  TextWidget(
+                    text: getCurrProduct.title,
+                    color: color,
+                    textSize: 24,
+                    isTitle: true,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  TextWidget(
+                    text: '\$${usedPrice.toStringAsFixed(2)}',
+                    color: color,
+                    textSize: 20,
+                    isTitle: false,
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Material(
                   borderRadius: BorderRadius.circular(12),
-                  onTap: _isInCart
-                      ? null
-                      : () async {
-                          final User? user = authInstance.currentUser;
+                  color: Colors.green,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: _isInCart
+                        ? null
+                        : () async {
+                            final User? user = authInstance.currentUser;
 
-                          if (user == null) {
-                            GlobalMethods.errorDialog(
-                              subtitle: 'No user found, Please login first',
+                            if (user == null) {
+                              GlobalMethods.errorDialog(
+                                subtitle: 'No user found, Please login first',
+                                context: context,
+                              );
+                              return;
+                            }
+                            await GlobalMethods.addToCart(
+                              productId: getCurrProduct.id,
+                              quantity: 1,
                               context: context,
                             );
-                            return;
-                          }
-                          await GlobalMethods.addToCart(
-                            productId: getCurrProduct.id,
-                            quantity: 1,
-                            context: context,
-                          );
-                          await cartProvider.fetchCart();
-                          // cartProvider.addProductsToCart(
-                          //   productId: getCurrProduct.id,
-                          //   quantity: 1,
-                          // );
-                        },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      _isInCart ? Icons.check : IconlyBold.plus,
-                      color: Colors.white,
-                      size: 20,
+                            await cartProvider.fetchCart();
+                            // cartProvider.addProductsToCart(
+                            //   productId: getCurrProduct.id,
+                            //   quantity: 1,
+                            // );
+                          },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        _isInCart ? Icons.check : IconlyBold.plus,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
