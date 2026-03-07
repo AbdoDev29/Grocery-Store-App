@@ -37,6 +37,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   Widget build(BuildContext context) {
     Size size = Utils(context).getScreenSize;
     final Color color = Utils(context).color;
+    final theme = Utils(context).getTheme;
     final productProviders = Provider.of<ProductProvider>(context);
     final wishlistProvider = Provider.of<WishlistProvider>(context);
 
@@ -189,34 +190,49 @@ class _ProductDetailsState extends State<ProductDetails> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        quantityControl(
+                        const Spacer(),
+                        _quantityController(
                           fct: () {
                             if (_quantityTextController.text == '1') {
                               return;
                             } else {
                               setState(() {
                                 _quantityTextController.text =
-                                    (int.parse(_quantityTextController.text) -
+                                    (int.parse(
+                                              _quantityTextController.text,
+                                            ) -
                                             1)
                                         .toString();
                               });
                             }
                           },
+                          color: const Color(0xffF57E2A),
                           icon: CupertinoIcons.minus,
-                          color: Colors.red,
+                          isPlus: false,
                         ),
                         const SizedBox(
-                          width: 5,
+                          width: 2,
                         ),
                         Flexible(
                           flex: 1,
                           child: TextField(
+                            style: TextStyle(
+                              color: color,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
                             controller: _quantityTextController,
                             key: const ValueKey('quantity'),
                             keyboardType: TextInputType.number,
                             maxLines: 1,
+                            readOnly: true,
                             decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+
+                              focusedBorder: InputBorder.none,
+                              isDense: false,
+                              contentPadding: EdgeInsets.zero,
                             ),
                             textAlign: TextAlign.center,
                             cursorColor: Colors.green,
@@ -235,20 +251,30 @@ class _ProductDetailsState extends State<ProductDetails> {
                             },
                           ),
                         ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        quantityControl(
+                        // const SizedBox(
+                        //   width: 2,
+                        // ),
+                        _quantityController(
                           fct: () {
                             setState(() {
                               _quantityTextController.text =
-                                  (int.parse(_quantityTextController.text) + 1)
+                                  (int.parse(
+                                            _quantityTextController.text,
+                                          ) +
+                                          1)
                                       .toString();
                             });
+                            // if (_quantityTextController.text == '1') {
+                            //   return;
+                            // } else {
+
+                            // }
                           },
+                          color: const Color(0xffF57E2A),
                           icon: CupertinoIcons.plus,
-                          color: Colors.green,
+                          isPlus: true,
                         ),
+                        const Spacer(),
                       ],
                     ),
                     const Spacer(),
@@ -259,7 +285,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         horizontal: 30,
                       ),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: theme ? const Color(0xFF1a1f3c) : Colors.white,
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20),
@@ -274,7 +300,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               children: [
                                 TextWidget(
                                   text: 'Total',
-                                  color: Colors.red.shade300,
+                                  color: const Color(0xffD85454),
                                   textSize: 20,
                                   isTitle: true,
                                 ),
@@ -310,7 +336,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                           Flexible(
                             child: Material(
-                              color: Colors.green,
+                              color: const Color(0xffF48A3B),
                               borderRadius: BorderRadius.circular(10),
                               child: InkWell(
                                 onTap: _isInCart
@@ -343,11 +369,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       },
                                 borderRadius: BorderRadius.circular(10),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                    horizontal: 38,
+                                  ),
                                   child: TextWidget(
                                     text: _isInCart ? 'In cart' : 'Add to cart',
                                     color: Colors.white,
                                     textSize: 18,
+                                    isTitle: true,
                                   ),
                                 ),
                               ),
@@ -391,6 +421,55 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _quantityController({
+    required Function fct,
+    required IconData icon,
+    required Color color,
+    required bool isPlus, // 👈 add this
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: isPlus
+          ? Material(
+              color: color,
+              borderRadius: BorderRadius.circular(24),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(24),
+                onTap: () => fct(),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+              ),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: color,
+                  width: 1.5,
+                ),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(24),
+                onTap: () => fct(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    icon,
+                    color: color,
+                    size: 20,
+                  ),
+                ),
+              ),
+            ),
     );
   }
 }

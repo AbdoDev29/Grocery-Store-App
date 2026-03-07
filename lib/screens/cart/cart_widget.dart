@@ -100,7 +100,7 @@ class _CartWidgetState extends State<CartWidget> {
                     ElevatedButton(
                       onPressed: () => Navigator.of(ctx).pop(true),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xffD85454), // 👈 red
+                        backgroundColor: const Color(0xffD85454),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
