@@ -8,6 +8,7 @@ import 'package:shop/models/cart_model.dart';
 import 'package:shop/providers/cart_provider.dart';
 import 'package:shop/providers/product_provider.dart';
 import 'package:shop/providers/wishlist_provider.dart';
+import 'package:shop/services/global_methods.dart';
 import 'package:shop/widgets/heart_btn.dart';
 import 'package:shop/widgets/text_widget.dart';
 import '../../services/utils.dart';
@@ -65,67 +66,19 @@ class _CartWidgetState extends State<CartWidget> {
         children: [
           SlidableAction(
             onPressed: (context) async {
-              final confirm = await showDialog(
+              final confirm = await GlobalMethods.warningDialog(
                 context: context,
-                builder: (ctx) => AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  title: const Text('Are you sure?'),
-                  content: const Text(
-                    'Do you want to remove the item from the cart?',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  actions: [
-                    OutlinedButton(
-                      onPressed: () => Navigator.of(ctx).pop(false),
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: color),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
-                        ),
-                      ),
-
-                      child: const Text(
-                        'Back',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => Navigator.of(ctx).pop(true),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xffD85454),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
-                        ),
-                      ),
-                      child: const Text(
-                        'Delete',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                title: 'Remove Item',
+                subtitle:
+                    'Are you sure you want to remove the item from the cart?',
+                fct: () async {
+                  await cartProvider.removeOneItem(
+                    cartId: cartModel.id,
+                    productId: cartModel.productId,
+                    quantity: cartModel.quantity,
+                  );
+                },
               );
-              if (confirm == true) {
-                await cartProvider.removeOneItem(
-                  cartId: cartModel.id,
-                  productId: cartModel.productId,
-                  quantity: cartModel.quantity,
-                );
-              }
             },
             backgroundColor: const Color(0xffD85454),
             foregroundColor: Colors.white,

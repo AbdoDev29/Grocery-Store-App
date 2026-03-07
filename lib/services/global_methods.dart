@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop/consts/firebase_consts.dart';
+import 'package:shop/services/utils.dart';
 import 'package:uuid/uuid.dart';
 
 import '../widgets/text_widget.dart';
@@ -20,50 +21,135 @@ class GlobalMethods {
   }) async {
     await showDialog(
       context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              Image.asset(
-                'assets/images/warning_sign.png',
-                height: 20,
-                width: 20,
-                fit: BoxFit.fill,
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              Text(title),
-            ],
+        final Color color = Utils(context).color;
+
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          content: Text(subtitle),
-          actions: [
-            TextButton(
-              onPressed: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                }
-              },
-              child: TextWidget(
-                color: Colors.cyan,
-                text: 'Cancel',
-                textSize: 18,
-              ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () {
-                fct();
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                }
-              },
-              child: TextWidget(
-                color: Colors.red,
-                text: 'OK',
-                textSize: 18,
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.warning_amber_rounded,
+                    color: Colors.red,
+                    size: 40,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                Text(
+                  subtitle,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: color,
+                    height: 1.5,
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                const Divider(height: 1),
+
+                const SizedBox(height: 16),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          if (Navigator.canPop(context)) {
+                            Navigator.pop(context);
+                          }
+                        },
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.grey.shade300),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: color,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 12),
+
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          fct();
+                          if (Navigator.canPop(context)) {
+                            Navigator.pop(context);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: const Text(
+                          'Confirm',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
@@ -71,42 +157,107 @@ class GlobalMethods {
 
   static Future<void> errorDialog({
     required String subtitle,
-
     required BuildContext context,
   }) async {
     await showDialog(
       context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.6),
       builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              Image.asset(
-                'assets/images/warning_sign.png',
-                height: 20,
-                width: 20,
-                fit: BoxFit.fill,
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              const Text('An Error occured'),
-            ],
+        final Color color = Utils(context).color;
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          content: Text(subtitle),
-          actions: [
-            TextButton(
-              onPressed: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                }
-              },
-              child: TextWidget(
-                color: Colors.cyan,
-                text: 'Ok',
-                textSize: 18,
-              ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
             ),
-          ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.error_outline_rounded,
+                    color: Colors.orange,
+                    size: 40,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                Text(
+                  'An Error Occurred',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                Text(
+                  subtitle,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: color,
+                    height: 1.5,
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                const Divider(height: 1),
+
+                const SizedBox(height: 16),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child: const Text(
+                      'OK',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
