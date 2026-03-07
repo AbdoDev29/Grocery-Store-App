@@ -66,9 +66,9 @@ class EmptyScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: themeState
                       ? const Color.fromARGB(255, 42, 66, 69)
-                      : const Color.fromARGB(255, 89, 176, 188),
+                      : const Color(0xffF48A3B),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.circular(4.0),
+                    borderRadius: BorderRadiusGeometry.circular(12.0),
                     side: const BorderSide(color: Colors.white),
                   ),
                 ),
@@ -85,9 +85,7 @@ class EmptyScreen extends StatelessWidget {
                   ),
                   child: TextWidget(
                     text: buttonText,
-                    color: themeState
-                        ? Colors.grey.shade300
-                        : Colors.grey.shade800,
+                    color: Colors.white,
                     textSize: 20,
                     isTitle: true,
                   ),

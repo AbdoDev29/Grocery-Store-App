@@ -43,7 +43,7 @@ class WishlistWidget extends StatelessWidget {
           );
         },
         child: Container(
-          height: size.height * 0.20,
+          height: size.height * 0.15,
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             border: Border.all(color: color, width: 1),
@@ -60,32 +60,42 @@ class WishlistWidget extends StatelessWidget {
                   child: FancyShimmerImage(
                     imageUrl: getCurrProduct.imageUrl,
 
-                    boxFit: BoxFit.fill,
+                    boxFit: BoxFit.contain,
                   ),
                 ),
               ),
               Flexible(
                 flex: 3,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Flexible(
                       child: Row(
                         children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              IconlyLight.bag2,
-                              color: color,
+                          // IconButton(
+                          //   onPressed: () {},
+                          //   icon: Icon(
+                          //     IconlyLight.bag2,
+                          //     color: color,
+                          //   ),
+                          // ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 50.0,
+
+                              vertical: 15.0,
                             ),
-                          ),
-                          HeartBTN(
-                            productId: getCurrProduct.id,
-                            isInWishlist: _isInWishlist,
+                            child: HeartBTN(
+                              productId: getCurrProduct.id,
+                              isInWishlist: _isInWishlist,
+                            ),
                           ),
                         ],
                       ),
+                    ),
+                    const SizedBox(
+                      height: 60,
                     ),
                     Flexible(
                       flex: 3,
