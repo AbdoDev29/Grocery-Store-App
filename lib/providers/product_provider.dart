@@ -6,7 +6,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductProvider with ChangeNotifier {
-  static List<ProductModel> _productsList = [];
+  List<ProductModel> _productsList = [];
+  bool _isFetched = false;
   List<ProductModel> get getProducts {
     return _productsList;
   }
@@ -16,12 +17,17 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    await FirebaseFirestore.instance.collection('products').get().then((
-      QuerySnapshot productSnapshot,
-    ) {
+    if (_isFetched) return;
+    try {
+      // 👈 correct try-catch structure
+      final QuerySnapshot productSnapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .get();
+
       _productsList = [];
-      // _productsList.clear();
-      productSnapshot.docs.forEach((element) {
+
+      for (var element in productSnapshot.docs) {
+        // 👈 use for loop not forEach
         _productsList.insert(
           0,
           ProductModel(
@@ -29,16 +35,24 @@ class ProductProvider with ChangeNotifier {
             title: element.get('title'),
             imageUrl: element.get('imageUrl'),
             productCategoryName: element.get('productCategoryName'),
-            price: double.parse(
-              element.get('price'),
-            ),
+            price: double.parse(element.get('price')),
             salePrice: element.get('salePrice'),
             isOnSale: element.get('isOnSale'),
             isPiece: element.get('isPiece'),
           ),
         );
-      });
-    });
+      }
+
+      _isFetched = true; // 👈 outside the loop
+      notifyListeners(); // 👈 outside the loop
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  void clearCache() {
+    _isFetched = false;
+    _productsList = [];
     notifyListeners();
   }
 

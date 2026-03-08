@@ -23,7 +23,7 @@ class _FetchScreenState extends State<FetchScreen> {
   @override
   void initState() {
     images.shuffle();
-    Future.delayed(const Duration(microseconds: 5), () async {
+    Future.delayed(const Duration(milliseconds: 500), () async {
       final productsProvider = Provider.of<ProductProvider>(
         context,
         listen: false,
@@ -48,7 +48,7 @@ class _FetchScreenState extends State<FetchScreen> {
         await cartProvider.fetchCart();
         await wishlistProvider.fetchWishlist();
       }
-
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (ctx) => const BottomBarScreen(),
